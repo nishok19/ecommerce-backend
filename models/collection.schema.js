@@ -4,7 +4,7 @@ const collectionSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Please provide a product name"],
+      required: [true, "Please provide a category"],
       trim: true,
       maxLength: [
         120,

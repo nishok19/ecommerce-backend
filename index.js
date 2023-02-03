@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import app from "./app.js";
 import config from "./config/index.js";
+import routes from "./routes/routes.js";
 
 //create a fn
 // run a fn
@@ -26,3 +27,5 @@ import config from "./config/index.js";
     throw err;
   }
 })();
+
+app.use("/", routes);
