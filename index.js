@@ -3,10 +3,6 @@ import app from "./app.js";
 import config from "./config/index.js";
 import routes from "./routes/routes.js";
 
-//create a fn
-// run a fn
-// (async () => {})()
-
 (async () => {
   try {
     await mongoose.connect(config.MONGODB_URL);

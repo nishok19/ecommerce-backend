@@ -1,6 +1,6 @@
-import Collection from '../models/collection.schema.js'
-import asyncHandler from '../services/asyncHandler'
-import CustomError from '../utils/customError'
+import Collection from "../models/collection.schema.js";
+import asyncHandler from "../services/asyncHandler.js";
+import CustomError from "../utils/customError.js";
 
 /******************************************************
  * @Create_COLLECTION
@@ -11,88 +11,84 @@ import CustomError from '../utils/customError'
  ******************************************************/
 
 export const createCollection = asyncHandler(async (req, res) => {
-    //take name from front end
-    const { name } = req.body
+  //take name from front end
+  const { name } = req.body;
 
-    if (!name) {
-        throw new CustomError("Collection name is required", 400)
-    }
+  if (!name) {
+    throw new CustomError("Collection name is required", 400);
+  }
 
-    //add this name to database
-    const collection = await Collection.create({
-        name
-    })
-    //send this response value to frontend
-    res.status(200).json({
-        success: true,
-        message: "Collection created with success",
-        collection
-    })
-
-})
+  //add this name to database
+  const collection = await Collection.create({
+    name,
+  });
+  //send this response value to frontend
+  res.status(200).json({
+    success: true,
+    message: "Collection created with success",
+    collection,
+  });
+});
 
 export const updateCollection = asyncHandler(async (req, res) => {
-    //existing value to be updates
-    const {id: collectionId} = req.params
-    //new value to get updated
-    const {name} = req.body
+  //existing value to be updates
+  const { id: collectionId } = req.params;
+  //new value to get updated
+  const { name } = req.body;
 
-    if (!name) {
-        throw new CustomError("Collection name is required", 400)
+  if (!name) {
+    throw new CustomError("Collection name is required", 400);
+  }
+
+  let updatedCollection = await Collection.findByIdAndUpdate(
+    collectionId,
+    {
+      name,
+    },
+    {
+      new: true,
+      runValidators: true,
     }
+  );
 
-    let updatedCollection = await Collection.findByIdAndUpdate(
-        collectionId,
-        {
-            name,
-        },
-        {
-            new: true,
-            runValidators: true
-        }
-    )
+  if (!updatedCollection) {
+    throw new CustomError("Collection not found", 400);
+  }
 
-    if (!updatedCollection) {
-        throw new CustomError("Collection not found", 400)
-    }
+  //send response to front end
+  res.status(200).json({
+    success: true,
+    message: "Collection updated successfully",
+    updateCollection,
+  });
+});
 
-    //send response to front end
-    res.status(200).json({
-        success: true,
-        message: "Collection updated successfully",
-        updateCollection
-    })
+export const deleteCollection = asyncHandler(async (req, res) => {
+  const { id: collectionId } = req.params;
 
-})
+  const collectionToDelete = await Collection.findByIdAndDelete(collectionId);
 
-export const deleteCollection = asyncHandler(async(req, res) => {
-    const {id: collectionId} = req.params
+  if (!collectionToDelete) {
+    throw new CustomError("Collection not found", 400);
+  }
 
-    const collectionToDelete = await Collection.findByIdAndDelete(collectionId)
+  collectionToDelete.remove();
+  //send response to front end
+  res.status(200).json({
+    success: true,
+    message: "Collection deleted successfully",
+  });
+});
 
-    if (!collectionToDelete) {
-        throw new CustomError("Collection not found", 400)
-    }
+export const getAllCollections = asyncHandler(async (req, res) => {
+  const collections = await Collection.find();
 
-    collectionToDelete.remove()
-    //send response to front end
-    res.status(200).json({
-        success: true,
-        message: "Collection deleted successfully",
-        
-    })
-})
+  if (!collections) {
+    throw new CustomError("No Collection found", 400);
+  }
 
-
-export const getAllCollections = asyncHandler(async(req, res) => {
-    const collections = await Collection.find()
-
-    if (!collections) {
-        throw new CustomError("No Collection found", 400)
-    }
-
-    res.status(200).json({
-        success: true,
-        collections
-    })
-})
+  res.status(200).json({
+    success: true,
+    collections,
+  });
+});
