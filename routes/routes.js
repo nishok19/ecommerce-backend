@@ -1,5 +1,6 @@
 import express from "express";
 import { login, signup } from "../Controllers/auth.controller.js";
+import { createCollection } from "../Controllers/collection.controller.js";
 import {
   addProduct,
   getAllProducts,
@@ -12,5 +13,7 @@ router.post("/api/products", addProduct);
 
 router.post("/api/auth/signup", signup);
 router.post("/api/auth/login", login);
+
+router.post("/api/collection", createCollection);
 
 export default router;
