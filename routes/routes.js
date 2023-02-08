@@ -1,6 +1,9 @@
 import express from "express";
 import { login, signup } from "../Controllers/auth.controller.js";
-import { createCollection } from "../Controllers/collection.controller.js";
+import {
+  createCollection,
+  getAllCollections,
+} from "../Controllers/collection.controller.js";
 import {
   addProduct,
   getAllProducts,
@@ -15,5 +18,6 @@ router.post("/api/auth/signup", signup);
 router.post("/api/auth/login", login);
 
 router.post("/api/collection", createCollection);
+router.get("/api/collection", getAllCollections);
 
 export default router;

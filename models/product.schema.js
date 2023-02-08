@@ -34,12 +34,8 @@ const productSchema = new mongoose.Schema(
       default: 0,
     },
     collectionId: {
-      // type: mongoose.Schema.Types.ObjectId,
-      // ref: "Collection",
-      type: String,
-      required: [true, "Please provide a Category name"],
-      trim: true,
-      maxLength: [30, "Product Category should be a max of 30 characters"],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Collection",
     },
   },
   {
