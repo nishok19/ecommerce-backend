@@ -18,7 +18,6 @@ export const cookieOptions = {
  * @returns User Object
  ******************************************************/
 export const signup = asyncHandler(async (req, res) => {
-  //   try {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
@@ -40,17 +39,13 @@ export const signup = asyncHandler(async (req, res) => {
   console.log(user);
   user.password = undefined;
 
-  res.cookie("token", token, cookieOptions);
+  res.cookie("jwt", token, cookieOptions);
 
   res.status(200).json({
     success: true,
     token,
     user,
   });
-  //   } catch (err) {
-  //     console.log("Error in Singup", err);
-  // res.status(401).json(err);
-  //   }
 });
 
 /******************************************************
@@ -79,7 +74,7 @@ export const login = asyncHandler(async (req, res) => {
   if (isPasswordMatched) {
     const token = user.getJwtToken();
     user.password = undefined;
-    res.cookie("token", token, cookieOptions);
+    res.cookie("jwt", token, cookieOptions);
     return res.status(200).json({
       success: true,
       token,
@@ -99,7 +94,7 @@ export const login = asyncHandler(async (req, res) => {
  ******************************************************/
 export const logout = asyncHandler(async (_req, res) => {
   // res.clearCookie()
-  res.cookie("token", null, {
+  res.cookie("jwt", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
   });
@@ -200,7 +195,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
   user.password = undefined;
 
   //helper method for cookie can be added
-  res.cookie("token", token, cookieOptions);
+  res.cookie("jwt", token, cookieOptions);
   res.status(200).json({
     success: true,
     user,
