@@ -99,7 +99,6 @@ export const getAllProducts = asyncHandler(async (req, res) => {
   if (!products) {
     throw new CustomError("No product was found", 404);
   }
-  console.log("userrrrrrrrrr", req.user);
   res.status(200).json({
     success: true,
     products,
