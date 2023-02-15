@@ -1,4 +1,5 @@
 import Product from "../models/product.schema.js";
+import User from "../models/user.schema.js";
 import formidable from "formidable";
 import fs from "fs";
 import { deleteFile, s3FileUpload } from "../services/imageUpload.js";
@@ -128,15 +129,28 @@ export const getProductById = asyncHandler(async (req, res) => {
   });
 });
 
-// assignment to read
+/**********************************************************
+ * @ADD_TO_CART
+ * @route https://localhost:5000/api/product/cart/:id
+ * @description Controller used for adding a product to the user's cart
+ * @description User can add a product to their cart
+ * @returns Products Object
+ *********************************************************/
 
-/*
-model.aggregate([{}, {}, {}])
+export const addProductToUserCart = asyncHandler(async (req, res) => {
+  const { id: productId } = req.params;
+  const { _id: userId } = req.user;
 
-$group
-$push
-$$ROOT
-$lookup
-$project
+  const user = await User.findById(userId);
 
-*/
+  if (!user) throw new CustomeError("No user was found", 404);
+
+  await user.cart.push(productId);
+
+  user.save();
+
+  res.status(200).json({
+    success: true,
+    user,
+  });
+});

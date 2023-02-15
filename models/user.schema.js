@@ -28,6 +28,12 @@ const userSchema = mongoose.Schema(
       enum: Object.values(AuthRoles),
       default: AuthRoles.USER,
     },
+    cart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
     forgotPasswordToken: String,
     forgotPasswordExpiry: Date,
   },

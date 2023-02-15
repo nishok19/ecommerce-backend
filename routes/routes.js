@@ -6,6 +6,7 @@ import {
 } from "../Controllers/collection.controller.js";
 import {
   addProduct,
+  addProductToUserCart,
   getAllProducts,
 } from "../Controllers/product.controller.js";
 import { isLoggedIn } from "../middlewares/auth.middleware.js";
@@ -13,7 +14,9 @@ import { isLoggedIn } from "../middlewares/auth.middleware.js";
 const router = express.Router();
 
 router.get("/api/products", isLoggedIn, getAllProducts);
-router.post("/api/products", addProduct);
+router.post("/api/products", isLoggedIn, addProduct);
+
+router.put("/api/cart/:id", isLoggedIn, addProductToUserCart);
 
 router.post("/api/auth/signup", signup);
 router.post("/api/auth/login", login);
