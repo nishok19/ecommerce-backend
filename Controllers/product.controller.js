@@ -145,7 +145,20 @@ export const addProductToUserCart = asyncHandler(async (req, res) => {
 
   if (!user) throw new CustomeError("No user was found", 404);
 
-  await user.cart.push(productId);
+  const newProduct = { productId, count: 1 };
+
+  const isProductPresent = await user.cart.filter(
+    (item) => item.productId.toString() === productId
+  );
+
+  console.log("dsaf", isProductPresent);
+
+  if (isProductPresent.length !== 0) {
+    res.status(204).json({ success: true });
+    return;
+  }
+
+  await user.cart.push(newProduct);
 
   user.save();
 
