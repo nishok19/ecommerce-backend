@@ -151,8 +151,6 @@ export const addProductToUserCart = asyncHandler(async (req, res) => {
     (item) => item.productId.toString() === productId
   );
 
-  console.log("dsaf", isProductPresent);
-
   if (isProductPresent.length !== 0) {
     res.status(204).json({ success: true });
     return;
@@ -165,5 +163,52 @@ export const addProductToUserCart = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+export const updateCartProductCount = asyncHandler(async (req, res) => {
+  const { id: productId } = req.params;
+  const { count } = req.body;
+  const { _id: userId } = req.user;
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new CustomeError("No user was found", 404);
+
+  user.cart.map((item) => {
+    if (item.productId.toString() === productId) {
+      item.count = count;
+    }
+  });
+
+  user.save();
+
+  return res.status(200).json({
+    success: true,
+    user,
+  });
+});
+
+export const deleteCartProduct = asyncHandler(async (req, res) => {
+  const { id: productId } = req.params;
+  const { _id: userId } = req.user;
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new CustomeError("No user was found", 404);
+
+  const newCart = user.cart.filter(
+    (item) => item.productId.toString() !== productId
+  );
+
+  user.cart = newCart;
+
+  console.log("cartttttttt", user.cart, productId, newCart);
+  user.save();
+
+  return res.status(200).json({
+    success: true,
+    user,
+    productId,
   });
 });

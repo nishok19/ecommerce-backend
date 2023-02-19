@@ -34,7 +34,10 @@ const userSchema = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Product",
         },
-        count: Number,
+        count: {
+          type: Number,
+          default: 1,
+        },
       },
     ],
     forgotPasswordToken: String,
