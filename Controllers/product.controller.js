@@ -166,6 +166,14 @@ export const addProductToUserCart = asyncHandler(async (req, res) => {
   });
 });
 
+/**********************************************************
+ * @UPDATE_TO_CART
+ * @route https://localhost:5000/api/cart/:id
+ * @description Updating the cart
+ * @description User can increase or decrease the number of items in the cart
+ * @returns User Object
+ *********************************************************/
+
 export const updateCartProductCount = asyncHandler(async (req, res) => {
   const { id: productId } = req.params;
   const { count } = req.body;
@@ -189,6 +197,14 @@ export const updateCartProductCount = asyncHandler(async (req, res) => {
   });
 });
 
+/**********************************************************
+ * @DELETE_TO_CART
+ * @route https://localhost:5000/api/cart/:id
+ * @description Deleting a product from the cart
+ * @description User can remove a product from the cartu
+ * @returns User Object
+ *********************************************************/
+
 export const deleteCartProduct = asyncHandler(async (req, res) => {
   const { id: productId } = req.params;
   const { _id: userId } = req.user;
@@ -203,12 +219,34 @@ export const deleteCartProduct = asyncHandler(async (req, res) => {
 
   user.cart = newCart;
 
-  console.log("cartttttttt", user.cart, productId, newCart);
   user.save();
 
   return res.status(200).json({
     success: true,
     user,
     productId,
+  });
+});
+
+/**********************************************************
+ * @SEARCH_PRODUCTS
+ * @route https://localhost:5000/api/product/:searchText
+ * @description Controller used for searching products using a keyword
+ * @description Searching the products for a keyword
+ * @returns Products Object
+ *********************************************************/
+export const searchProducts = asyncHandler(async (req, res) => {
+  const { searchText } = req.params;
+
+  let products = await Product.find({
+    $or: [
+      { name: new RegExp(searchText, "i") },
+      { description: new RegExp(searchText, "i") },
+    ],
+  });
+
+  return res.status(200).json({
+    success: true,
+    products,
   });
 });
