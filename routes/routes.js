@@ -4,6 +4,7 @@ import {
   createCollection,
   getAllCollections,
 } from "../Controllers/collection.controller.js";
+import { generateRazorpayOrderId } from "../Controllers/order.controller.js";
 import {
   addProduct,
   addProductToUserCart,
@@ -30,5 +31,8 @@ router.get("/api/auth/logout", logout);
 
 router.post("/api/collection", isLoggedIn, createCollection);
 router.get("/api/collection", isLoggedIn, getAllCollections);
+
+router.post("/api/order/razorpay", isLoggedIn, generateRazorpayOrderId);
+router.post("/api/order/razorpay/success", isLoggedIn, generateRazorpayOrderId);
 
 export default router;
