@@ -24,7 +24,7 @@ export const isLoggedIn = asyncHandler(async (req, _res, next) => {
     //_id, find user based on id, set this in req.user
     req.user = await User.findById(
       decodedJwtPayload._id,
-      "username email role cart"
+      "username email role cart orders"
     );
     next();
   } catch (error) {

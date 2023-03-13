@@ -1,5 +1,6 @@
 import Product from "../models/product.schema.js";
 import Coupon from "../models/coupon.schema.js";
+import User from "../models/user.schema.js";
 import Order from "../models/order.schema.js";
 import asyncHandler from "../services/asyncHandler.js";
 import CustomError from "../utils/customError.js";
@@ -25,7 +26,6 @@ export const generateRazorpayOrderId = asyncHandler(async (req, res) => {
   let totalAmount = 0;
 
   await products.map((p) => {
-    console.log("reqqqqqqqqqqqqqqqqqqq", p.price, totalAmount);
     totalAmount = totalAmount + p.price;
   });
 
@@ -51,5 +51,43 @@ export const generateRazorpayOrderId = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     order,
+  });
+});
+
+/**********************************************************
+ * @UPDATE_SUCCESSFUL_PAYMENT
+ * @route https://localhost:5000/api/order/razorpay/success
+ * @description Controller used for updating the database on successful payment
+ * @description Adds the items to the orders list in User data
+ * @returns Order Object with User
+ *********************************************************/
+
+export const updateSuccessPayment = asyncHandler(async (req, res) => {
+  const { data: rzp } = req.body;
+  const { _id: userId } = req.user;
+
+  if (!rzp.razorpay_payment_id && !rzp.razorpay_order_id && !razorpay_signature)
+    throw new CustomError(
+      "Error in updating the entries after successful payment ",
+      rzp
+    );
+
+  //
+  const user = await User.findById(userId);
+
+  if (!user) throw new CustomError("User not found", 400);
+
+  user.cart.map((item) => {
+    user.orders.push(item);
+  });
+
+  console.log("dataaaaaaa", user.orders, user.cart);
+  user.cart = [];
+
+  user.save();
+
+  res.status(200).json({
+    success: true,
+    user,
   });
 });
