@@ -3,6 +3,7 @@ import { login, logout, signup } from "../Controllers/auth.controller.js";
 import {
   createCollection,
   getAllCollections,
+  deleteCollection,
 } from "../Controllers/collection.controller.js";
 import {
   generateRazorpayOrderId,
@@ -34,6 +35,7 @@ router.get("/api/auth/logout", logout);
 
 router.post("/api/collection", isLoggedIn, createCollection);
 router.get("/api/collection", isLoggedIn, getAllCollections);
+router.delete("/api/collection/:id", isLoggedIn, deleteCollection);
 
 router.post("/api/order/razorpay", isLoggedIn, generateRazorpayOrderId);
 router.post("/api/order/razorpay/success", isLoggedIn, updateSuccessPayment);
